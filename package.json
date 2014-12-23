@@ -1,0 +1,27 @@
+{
+  "name": "mobile-request-inspector",
+  "version": "0.0.1",
+  "description": "mobile-request-inspector",
+  "keywords": [],
+  "author": {
+    "name": "mobile team"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/alarre/mobile-request-inspector.git"
+  },
+  "main": "./index",
+  "engines": {
+    "node": ">= 0.10.x"
+  },
+  "dependencies": {
+    "express": "^4.10.6",
+    "opener": "^1.4.0",
+    "socket.io": "~1.2.1"
+  },
+  "devDependencies": {
+    "coffee-script": "1.2",
+    "should": "~4.0.0"
+  },
+  "homepage": "https://github.com/alarre/mobile-request-inspector"
+}
