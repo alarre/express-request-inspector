@@ -4,60 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Mobile Request Inspector</title>
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="http://fb.me/react-0.12.2.js"></script>
-    <script src="http://fb.me/JSXTransformer-0.12.2.js"></script>
     
-    <!-- BUSCAR UN CDN POSTA!!! -->
-    <script src="https://rawgit.com/react-bootstrap/react-bootstrap-bower/master/react-bootstrap.min.js"></script>
+    <!-- TODO Usar browserify o similar!!! -->
+    <script type="text/javascript" src="/public/js/socketio/socket.io-1.2.0.js"></script>
+    <script type="text/javascript" src="/public/js/reactjs/react-0.12.2.js"></script>
+    <script type="text/javascript" src="/public/js/reactjs/JSXTransformer-0.12.2.js"></script>
+    <script type="text/javascript" src="/public/js/bootstrap/react-bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization','version':'1','packages':['timeline']}]}"></script>
     
-    <!-- MOVER A OTRO LUGAR!!! -->
-    <link href="http://react-bootstrap.github.io/vendor/bootstrap/bootstrap.css" rel="stylesheet">
-    <style>
-   
-    .ok {
-        color: green
-    }
-        
-    .warn {
-        color: orange
-    }   
-        
-    .error {
-        color: red
-    } 
-        
-    .req-highlight {
-      font-weight: bold;
-    }
-        
-    </style>
+    <link href="/public/css/bootstrap/bootstrap.css" rel="stylesheet">
+    <link href="/public/css/style.css" rel="stylesheet">
+    
 </head>
 
 <body>
-    <!--<img src="http://thecatapi.com/api/images/get?format=src&type=gif&size=small">-->
     <div id="content"></div>
-    <script type="text/jsx" src="/client.jsx"></script>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <div id="pruebaBootstrap"></div>
-    <script type="text/jsx">
- /*
- var a = (<Accordion>
-            <Panel header="1" eventKey='1'>zxc</Panel>
-            <Panel header="2" eventKey='2'>zxc</Panel>
-        </Accordion>);
-        React.render(a,pruebaBootstrap);
-        */
-</script>
+    <script type="text/jsx" src="/public/js/client.jsx"></script>
 </body>
 
 </html>

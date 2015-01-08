@@ -1,0 +1,15 @@
+.ok {
+    color: green
+}
+
+.warn {
+    color: orange
+}
+
+.error {
+    color: red
+}
+
+.req-highlight {
+    font-weight: bold;
+}
