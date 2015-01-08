@@ -15,7 +15,7 @@
     "node": ">= 0.10.x"
   },
   "dependencies": {
-    "express": "^4.10.6",
+    "express": "~4.6.0",
     "socket.io": "~1.2.1"
   },
   "devDependencies": {
