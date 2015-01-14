@@ -152,7 +152,7 @@ var TableRenderer = React.createClass({
 });
     
 function _getFullPath(protocol, host, path, port) {
-    var fullPath = (protocol) ? protocol + "://" : "";
+    var fullPath = ((protocol) ? protocol : "http") + "://";
     fullPath += (host) ? host + ":"+ port : "";
     fullPath += path;
     return fullPath;
@@ -180,7 +180,7 @@ var FormattedRequestPath = React.createClass({
             default:
                 methodClassName += " error";
         }
-        
+            
         return <span>
                     <span className="req-highlight ok">[{this.props.method}]</span> <b>{fullPath}</b> <span className={methodClassName}>[{this.props.statusCode} - {statusDesc}]</span> - <i>{this.props.time||"???"} ms</i>
                 </span>
@@ -280,8 +280,10 @@ var HttpCallList = React.createClass({
     render: function() {
           
         var renderHttpCall = function (httpCall, i) {
+            var fullPath = _getFullPath(httpCall.req.protocol, httpCall.req.host, httpCall.req.path, httpCall.req.port);
             var header = (<span><b>{i+1}. </b><FormattedRequestPath method={httpCall.req.method} host={httpCall.req.host} port={httpCall.req.port} path={httpCall.req.path} statusCode={httpCall.res.statusCode} time={httpCall.res.time} /></span>);
             return <Panel key={i+'_panel'} eventKey={i} header={header}>
+                          {(httpCall.req.method === 'GET') ? <RepeatRequestButton target={fullPath}/> : ""}
                        <HttpCall key={i+'_httpCall'} data={httpCall} />
                     </Panel>
         };
@@ -311,9 +313,10 @@ var HttpCallList = React.createClass({
         
 var HttpCall = React.createClass({
     render: function() {
-        //TODO modularizar esta sección :/
+        //TODO modularizar esta sección :/   
         return (
             <div>
+      
                 <TabbedArea defaultActiveKey={1}>
                    <TabPane eventKey={1} tab="Request">
                         <HttpConfigInfo data={this.props.data.config}/>
@@ -323,6 +326,7 @@ var HttpCall = React.createClass({
                    <TabPane eventKey={2} tab="Response">
                         <HttpResponseInfo data={this.props.data.res}/>
                    </TabPane>
+            
                 </TabbedArea>
             </div>
         );
@@ -405,9 +409,9 @@ var Request = React.createClass({
   render: function() {
   //TODO refactorizar esto para renderizar dinámicamente objetos... según type?
           
-      var logsTab = _getTabWithBadge('Logs', this.props.data.logs);
-      var httpTab = _getTabWithBadge('Http Calls', this.props.data.httpCalls);
-      
+      var logsTab = <TabWithBadge tabName='Logs' source={this.props.data.logs}/>;
+      var httpTab = <TabWithBadge tabName='Http Calls' source={this.props.data.httpCalls}/>;      
+
       return (
           <TabbedArea defaultActiveKey={1}>
             <TabPane eventKey={1} tab="Info"><BasicInfo data={this.props.data} /></TabPane>
@@ -419,10 +423,32 @@ var Request = React.createClass({
   }
 });
 
-function _getTabWithBadge(tabName, source) {
-    var sourceLength = (Array.isArray(source)) ? source.length : 0;
-    return <span>{tabName} <Badge>{sourceLength.toString()}</Badge></span>
-}
+var FloatingButton = React.createClass({
+    render: function() {
+        var float_style = {float: 'right'};
+
+        return <span style={float_style}>{this.props.children}</span>
+    }
+});
+        
+var RepeatRequestButton = React.createClass({
+  render: function() {
+      
+     // var float_style = {float: 'right'};
+
+    return <FloatingButton><a title="Repeat request in new window" href={this.props.target} target="_blank"><Glyphicon glyph="new-window" />repeat</a></FloatingButton>
+   // return <span style={float_style}><a title="Repeat request in new window" href={this.props.target} target="_blank"><Glyphicon glyph="new-window" /></a></span>;
+  }
+
+});
+
+var TabWithBadge = React.createClass({
+    render: function() {   
+        var sourceLength = (Array.isArray(this.props.source)) ? this.props.source.length : 0;
+        return <span>{this.props.tabName} <Badge>{sourceLength.toString()}</Badge></span>
+    }
+});                                   
+                                     
 
 /* Main component, which is mounted to the HTML */
 var RequestList = React.createClass({
@@ -476,6 +502,11 @@ var RequestList = React.createClass({
      ReqData.reqs = [];
      this.setState({ reqData : ReqData.reqs});
   },
+      
+  clearRequestByIdx: function(idx) {
+     ReqData.reqs.splice(idx, 1);
+     this.setState({ reqData : ReqData.reqs});
+  },
     
   render: function() {
       var requestsNodes = this.state.reqData.map(function (request, i) {
@@ -484,23 +515,28 @@ var RequestList = React.createClass({
           //el panel header, y no queda clickeable...
           var header = (<span> 
                         <ProgressBar active={request.status !== "end"} striped={request.status !== "end"} bsStyle={(request.status === "end") ? "info":"warning"} now={100}/>
-                        {request.uuid} <FormattedRequestPath method={request.req.method} path={request.req.path} statusCode={request.res && request.res.statusCode} time={request.res && request.res.time}/></span>);
+                        {request.uuid} <FormattedRequestPath host={request.req.host} port={request.req.port} method={request.req.method} path={request.req.path} statusCode={request.res && request.res.statusCode} time={request.res && request.res.time}/></span>);
+          //var fullPath = _getFullPath(this.props.data.req.protocol, this.props.data.req.host, this.props.data.req.path, this.props.data.req.port);
+      var fullPath = _getFullPath(request.req.protocol, request.req.host, request.req.path, request.req.port);
+          
           return (
             <Panel header={header} eventKey={i} key={request.uuid}>
+              {(request.req.method === 'GET') ? <RepeatRequestButton target={fullPath}/> : ""}
+              <FloatingButton><a title="Clear request" href="#" onClick={this.clearRequestByIdx.bind(this, i)}><Glyphicon glyph="trash" />clear&nbsp;</a></FloatingButton>
               <Request data={request}></Request>
             </Panel>
           );
-      });
+      }, this);
   
     return (
         <Grid>
             <Row>
               <Col md={11}><ProgressBar active={this.state.status.active} striped={this.state.status.striped} bsStyle={this.state.status.style} now={100} label={this.state.status.label}/></Col>
-              <Col md={1}><Button bsSize="xsmall" onClick={this.clearRequests}>Clear</Button></Col>
+              <Col md={1}><Button bsSize="xsmall" onClick={this.clearRequests}><Glyphicon glyph="trash" /> Clear</Button></Col>
             </Row>
             <Row>
                 <Col md={12}>
-                    <PageHeader><Label>{this.state.reqData.length}</Label> Requests Inspector</PageHeader>
+                    <PageHeader><Label>{this.state.reqData.length}</Label> Requests Inspector <Glyphicon glyph="search" /></PageHeader>
                     <Accordion>
                         {requestsNodes}
                     </Accordion>
