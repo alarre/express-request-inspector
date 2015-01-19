@@ -1,6 +1,6 @@
 {
   "name": "mobile-request-inspector",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "mobile-request-inspector",
   "keywords": [],
   "author": {
@@ -15,7 +15,7 @@
     "node": ">= 0.10.x"
   },
   "dependencies": {
-    "express": "^4.10.6",
+    "express": "~4.6.0",
     "socket.io": "~1.2.1"
   },
   "devDependencies": {},
@@ -25,8 +25,8 @@
   "bugs": {
     "url": "https://github.com/alarre/mobile-request-inspector/issues"
   },
-  "_id": "mobile-request-inspector@0.0.1",
+  "_id": "mobile-request-inspector@0.0.2",
   "_shasum": "8d99257d1f48402d2cf039fc19bb18103129f1cc",
-  "_from": "mobile-request-inspector@0.0.1",
-  "_resolved": "http://registry.npm.ml.com/mobile-request-inspector/-/mobile-request-inspector-0.0.1.tgz"
+  "_from": "mobile-request-inspector@0.0.2",
+  "_resolved": "http://registry.npm.ml.com/mobile-request-inspector/-/mobile-request-inspector-0.0.2.tgz"
 }
