@@ -25,7 +25,7 @@ Col = ReactBootstrap.Col;
 Alert = ReactBootstrap.Alert;
 Label = ReactBootstrap.Label;
 
-/* Hard coded listo of http status codes to provide more info */
+/* Hard coded list of http status codes to provide more info */
 var HTTP_STATUS_CODES = {
         '200' : 'OK',
         '201' : 'Created',
@@ -83,6 +83,7 @@ var JsonPrettyPrinter = React.createClass({
         event.target.rows = (event.target.rows !== this.state.height) ? this.state.height : 5;
     },
     getInitialState: function() {
+        console.log(this.props.data);
         var strJson = JSON.stringify(this.props.data||{}, undefined, 4) ;
         var jsonLines = strJson.split(/\n/);
         var height = (jsonLines.length >= 5) ? jsonLines.length + 1 : 5;
@@ -218,6 +219,43 @@ var Log = React.createClass({
         );
     }
 });
+
+
+
+var CacheHitList = React.createClass({
+  
+    render: function() {
+          var renderCacheHits = function(cache, i){
+            return <CacheHit key={i+'_cacheHit'} data={cache} />
+          }
+          
+        return (
+            <div>
+            {(this.props.data || []).length === 0 ? 
+               <Alert bsStyle="warning">No Cache Hits</Alert>
+               
+               : 
+            <ListGroup>
+                {(this.props.data).map(renderCacheHits)}
+            </ListGroup>
+            }
+            </div>
+        );
+    }
+});
+
+var CacheHit = React.createClass({
+    render: function() {
+        return (
+            <ListGroupItem header={this.props.data.url.method + ' ' +this.props.data.url.path + ' ' + this.props.data.url.query}>
+                <JsonPrettyPrinter data={this.props.data.value}/>
+            </ListGroupItem>
+        );
+    }
+});
+
+
+
 
 var Timeline = React.createClass({
   render: function(){
@@ -410,13 +448,15 @@ var Request = React.createClass({
   //TODO refactorizar esto para renderizar dinámicamente objetos... según type?
           
       var logsTab = <TabWithBadge tabName='Logs' source={this.props.data.logs}/>;
-      var httpTab = <TabWithBadge tabName='Http Calls' source={this.props.data.httpCalls}/>;      
+      var httpTab = <TabWithBadge tabName='Http Calls' source={this.props.data.httpCalls}/>;
+      var cacheHitsTab = <TabWithBadge tabName= "Cache Hits" source={this.props.data.cacheHits}/>;
 
       return (
           <TabbedArea defaultActiveKey={1}>
             <TabPane eventKey={1} tab="Info"><BasicInfo data={this.props.data} /></TabPane>
             <TabPane eventKey={2} tab={httpTab}><HttpCallList uuid={this.props.data.uuid} data={this.props.data.httpCalls} /></TabPane>
             <TabPane eventKey={3} tab={logsTab}><LogList data={this.props.data.logs} /></TabPane>
+            <TabPane eventKey={4} tab={cacheHitsTab}><CacheHitList data={this.props.data.cacheHits} /></TabPane>
           </TabbedArea>
 
     );
@@ -551,4 +591,3 @@ React.render(
   <RequestList />,
   document.getElementById('content')
 );
-
