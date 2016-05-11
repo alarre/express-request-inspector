@@ -1,7 +1,7 @@
 {
-  "name": "mobile-request-inspector",
-  "version": "0.0.4",
-  "description": "mobile-request-inspector",
+  "name": "mobile-request-inspector-client",
+  "version": "0.0.1",
+  "description": "mobile-request-inspector client component",
   "keywords": [],
   "author": {
     "name": "mobile team"
@@ -14,11 +14,11 @@
   "engines": {
     "node": ">= 0.10.x"
   },
-  "dependencies": {
-    "express": "~4.6.0",
-    "socket.io": "~1.2.1"
+  "dependencies": {},
+  "devDependencies": {
+  	"mobile-request-inspector-server": "0.0.1",
+	"opener": "1.4.0"
   },
-  "devDependencies": {},
   "homepage": "https://github.com/alarre/mobile-request-inspector",
   "readme": "mobile-request-inspector\n========================\n",
   "readmeFilename": "README.md",
